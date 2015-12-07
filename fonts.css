@@ -1,0 +1,42 @@
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Alegreya Sans'), local('AlegreyaSans-Regular'), url(https://fonts.gstatic.com/s/alegreyasans/v3/KYNzioYhDai7mTMnx_gDgoB9a16epZVaac-gfobfbfA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Alegreya Sans Bold'), local('AlegreyaSans-Bold'), url(https://fonts.gstatic.com/s/alegreyasans/v3/11EDm-lum6tskJMBbdy9aX726VmFjkD_1knHNL407_k.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Alegreya Sans Italic'), local('AlegreyaSans-Italic'), url(https://fonts.gstatic.com/s/alegreyasans/v3/TKyx_-JJ6MdpQruNk-t-PMTRVpfLYDaJu02tGY_cDUU.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: italic;
+  font-weight: 500;
+  src: local('Alegreya Sans Medium Italic'), local('AlegreyaSans-MediumItalic'), url(https://fonts.gstatic.com/s/alegreyasans/v3/WfiXipsmjqRqsDBQ1bA9Csu5A6Q16drCslwRrweSiJM.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Alegreya Sans Bold Italic'), local('AlegreyaSans-BoldItalic'), url(https://fonts.gstatic.com/s/alegreyasans/v3/WfiXipsmjqRqsDBQ1bA9CkXZMkInVmE5F43bEXap4GE.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Dosis Regular'), local('Dosis-Regular'), url(https://fonts.gstatic.com/s/dosis/v4/guC5lwT5Dw7anV_xfpCGqw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Dosis Bold'), local('Dosis-Bold'), url(https://fonts.gstatic.com/s/dosis/v4/Luunk03-uSz9LnB7oNEUuvesZW2xOQ-xsNqO47m55DA.ttf) format('truetype');
+}

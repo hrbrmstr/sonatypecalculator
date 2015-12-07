@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sonatype: Impact of software supply chain practices</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <!-- styles -->
+    <link href="bootstrap.min.css" rel="stylesheet" type='text/css'/>
+    <link href="jquery.bootstrap-touchspin.min.css" rel="stylesheet" type='text/css'/>
+    <link href='fonts.css' rel='stylesheet' type='text/css'/>
+    <link href="vis.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="jasny-bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="jquery-ui.css">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+            <script src="../assets/js/html5shiv.js"></script>
+        <![endif]-->
+    
+    <link rel="shortcut icon" href="favicon.ico">
+
+</head>
+
+<body>
+
+  <div id="leftnavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas">
+
+    <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:10px">
+      <div id="comp_panel" onclick="do_comp_panel_click(); return(false)" class="well well-sm" style="font-size:16px">&nbsp;</div>
+    </div></div>
+
+    <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:20px">
+      <label for="suppliers_panel" style="color:black">Suppliers/FOSS Projects</label>
+      <input class="form-control" id="suppliers_panel" type="text" placeholder="" name="suppliers_panel" value="7601"><br/>
+
+      <label for="versions_panel" style="color:black">Versions per Component</label>
+      <input class="form-control" id="versions_panel" type="text" placeholder="" name="versions_panel" value="8"><br/>
+
+      <label for="repovulns_panel" style="color:black">Known Undesirable %</label>
+      <input class="form-control" id="repovulns_panel" type="text" placeholder="" name="repovulns_panel" value="80"><br/>
+
+      <label for="repolic_panel" style="color:black">Restrictive Licenses %</label>
+      <input class="form-control" id="repolic_panel" type="text" placeholder="" name="repolic_panel" value="15"><br/>
+    </div></div>
+
+    <button id="lpbut" type="button" class="btn btn-default btn-sm" style="position:absolute; right:10px; bottom:30px" onclick="$('#leftnavmenu').offcanvas('hide'); return(false);">
+      <span class="glyphicon glyphicon-remove"></span>
+    </button>
+
+  </div>
+
+  <div id="rightnavmenu" class="navmenu navmenu-default navmenu-fixed-right offcanvas">
+
+    <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:10px">
+      <div id="impact_panel"  onclick="do_impact_panel_click(); return(false)" class="well well-sm" style="font-size:16px">&nbsp;</div>
+    </div></div>
+
+    <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:20px">
+
+      <label for="application_panel" style="color:black">Number of Apps</label>
+      <input class="form-control" id="application_panel" type="text" placeholder="" name="application_panel" value="2000"><br/>
+
+      <label for="perapp_panel" style="color:black">Components per App</label>
+      <input class="form-control" id="perapp_panel" type="text" placeholder="" name="perapp_panel" value="106"><br/>
+
+      <label title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." for="knownvuln_panel" style="color:black">Vuln ratio as % of parts</label>
+      <input class="form-control" title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." id="knownvuln_panel" type="text" placeholder="" name="knownvuln_panel" value="23"><br/>
+
+      <label for="knownlic_panel" style="color:black">Restrictive Licenses %</label>
+      <input class="form-control" id="knownlic_panel" type="text" placeholder="" name="knownlic_panel" value="8"><br/>
+
+    </div></div>
+
+    <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:20px">
+
+      <label for="goingtofix_panel" style="color:black">% Requiring Attention</label>
+      <input class="form-control" id="goingtofix_panel" type="text" placeholder="" name="goingtofix_panel" value="10"><br/>
+
+      <label for="costperhour_panel" style="color:black">Cost Per Hour</label>
+      <input class="form-control" id="costperhour_panel" type="text" placeholder="" name="costperhour_panel" value="100"><br/>
+
+      <label for="manhours_panel" style="color:black">Unplanned/unscheduled work/fix (hrs)</label>
+      <input class="form-control" id="manhours_panel" type="text" placeholder="" name="manhours_panel" value="10"><br/>
+
+    </div></div>
+
+
+    <button id="rpbut" type="button" class="btn btn-default btn-sm" style="position:absolute; right:10px; bottom:0px" onclick="$('#rightnavmenu').offcanvas('hide'); return(false);">
+      <span class="glyphicon glyphicon-remove"></span>
+    </button>
+
+  </div>
+
+<button id="calcmeleft" type="button" class="btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-th"></span>
+</button>
+
+<button id="calcmeright" type="button" class="btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-th"></span>
+</button>
+
+    <!-- navbar -->
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header" style="width:700px">
+        <a class="navbar-brand" href=""><img src="sonatype_logo_blackBG.png"/></a> <h3 style="color:white; margin-top:10px;">Impact of software supply chain practices</h3>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://sonatype.com/" target="_blank">Learn More</a></li>
+        <li>           
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scenarios</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="#" onclick="medium_typical(); return(false);">Medium/Typical</a></li>
+            <li><a href="#" onclick="google(); return(false);">Google</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+    <!-- /navbar -->
+
+    <!-- container -->
+  <div class="container-fluid" style="min-width:1024px">
+
+    <div class="row-fluid" style="">
+      <div class="col-xs-1 form-group vis" style="width:100px">
+        <label for="suppliers" style="color:steelblue; font-size:12px">Suppliers/<br/>FOSS Projects</label>
+        <input class="form-control" id="suppliers" type="text" placeholder="300" name="suppliers">
+      </div>
+      <div class="col-xs-1 form-group vis" style="width:90px">
+        <label for="versions" style="color:forestgreen; font-size:12px">Versions /<br/>component</label>
+        <input class="form-control" id="versions" type="text" placeholder="27" name="versions">
+      </div>
+       <div id="vv" class="col-xs-1 form-group vis" style="width:90px">
+        <label for="repovulns" style="color:#e31a1c">Known<br/>Undesir. %</label>
+        <input class="form-control" id="repovulns" type="text" placeholder="90" name="repovulns">
+      </div>
+      <div class="col-xs-2 form-group vis media-middle" style="pointer-events:none; height:80px; max-height:80px">
+         <div id="supp_text"  onclick="do_sv_click(); return(false)" class="well well-sm" style="display:none; margin-bottom:0px; height:80px; max-height:80px"></div>
+      </div>
+      <div class="col-xs-2 form-group vis media-middle" style="pointer-events:none; height:80px; max-height:80px">
+         <div id="app_text" onclick="do_aa_click(); return(false)" class="well well-sm" style="display:none; margin-bottom:0px; height:80px; max-height:80px"></div>
+      </div>
+      <div class="col-xs-1 form-group vis" style="width:100px">
+        <label for="applications" style="color:black">Number<br/>of Apps</label>
+        <input class="form-control" id="application" type="text" placeholder="25" name="application">
+      </div>
+      <div class="col-xs-1 form-group vis" style="width:100px">
+        <label for="perapp" style="color:black">Components<br/>per App</label>
+        <input class="form-control" id="perapp" type="text" placeholder="106" name="perapp">
+      </div>
+      <div id="kv" class="col-xs-1 form-group vis">
+        <label for="knownvuln" title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." style="color:#e31a1c; font-size:12px;">Vuln ratio<br/>% of parts</label>
+        <input class="form-control" title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." id="knownvuln" type="text" placeholder="23" name="knownvuln">
+      </div>
+      <div id="kl" class="col-xs-1 form-group vis" >
+        <label for="knownlic" style="color:#762a83;">Restrictive<br/>licenses %</label>
+        <input class="form-control" id="knownlic" type="text" placeholder="8" name="knownlic">
+      </div>
+    </div>
+
+    <div class="row-fluid" id="mainrow">
+      <div class="col-xs-6" id="col1">
+        <div id="vis2">
+        </div>
+      </div>
+      <div class="col-xs-6" style="height:100% !important" id="col2">
+        <div id="vis4">
+        </div>
+      </div>
+    </div>
+
+    <div class="row-fluid" style="padding-top:5px">
+      <div class="col-xs-2 form-group vis">
+        <label for="goingtofix" style="color:white">% Requiring Attention</label>
+        <input class="form-control" id="goingtofix" type="text" placeholder="10" name="remediated" value="10">
+      </div>      
+      <div class="col-xs-2 form-group vis">
+        <label for="costperhour" style="color:white;">Cost per hour</label>
+        <input class="form-control" id="costperhour" type="text" placeholder="100" name="costperhour" value="100">
+      </div>      
+      <div class="col-xs-2 form-group vis">
+        <label for="manhours" style="color:white;text-overflow: ellipsis !important; font-size:12px">Unplanned work/fix (hrs)</label>
+        <input class="form-control" id="manhours" type="text" placeholder="10" name="manhours" value="10">
+      </div>   
+      <div id="impact_parent_div" class="col-sm-3 form-group vis"  onclick="do_impact_click(); return(false)" >
+        <div id="impact_text" class="well well-sm" style="display:none; margin-bottom:0px; margin-top:10px"></div>
+      </div>
+      <div class="col-sm-3 form-group vis">
+        <div id="notinclude" class="well well-sm" style="display:none; margin-bottom:50px; margin-top:10px; font-size:11px">
+          Calculations do not include <b>breach cost</b>, <b>help desk calls</b>, <b>maintenance</b>, <b>time-to-market</b>, <b>reputation</b> or <b>stock price</b>.  
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<div style="pointer-events:none;position:absolute; bottom:0px; left:0px; height:80px; color:black; background:black; border-top:1px solid black; width:100%; z-index:-9999"> &nbsp;
+</div>
+
+<div id="impact_dialog"></div>
+
+<div id="nexusdiv" style="">
+
+<br/>
+
+<svg width="31.984375pt" viewBox="0 0 31.984375 29.601562" id="nexus">
+  <path
+     id="path13"
+     d="m 31.984375,6.933594 c 0,0.828125 -0.6875,1.5 -1.539063,1.5 l -28.902343,0 C 0.691406,8.433594 0,7.761719 0,6.933594 c 0,-0.828125 0.691406,-1.5 1.542969,-1.5 l 28.902343,0 c 0.851563,0 1.539063,0.671875 1.539063,1.5"
+     style="fill:#38619e;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <path
+     id="path15"
+     d="m 31.984375,1.5 c 0,0.828125 -0.6875,1.5 -1.539063,1.5 L 1.542969,3 C 0.691406,3 0,2.328125 0,1.5 0,0.671875 0.691406,0 1.542969,0 l 28.902343,0 c 0.851563,0 1.539063,0.671875 1.539063,1.5"
+     style="fill:#38619e;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <path
+     id="path17"
+     d="m 31.984375,12.378906 c 0,0.832032 -0.6875,1.503907 -1.539063,1.503907 l -28.902343,0 C 0.691406,13.882813 0,13.210938 0,12.378906 c 0,-0.828124 0.691406,-1.5 1.542969,-1.5 l 28.902343,0 c 0.851563,0 1.539063,0.671876 1.539063,1.5"
+     style="fill:#38619e;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <path
+     id="path19"
+     d="m 31.984375,22.808594 c 0,0.832031 -0.6875,1.5 -1.539063,1.5 l -28.902343,0 C 0.691406,24.308594 0,23.640625 0,22.808594 c 0,-0.828125 0.691406,-1.5 1.542969,-1.5 l 28.902343,0 c 0.851563,0 1.539063,0.671875 1.539063,1.5"
+     style="fill:#0f0c0c;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <path
+     id="path21"
+     d="m 31.984375,17.644532 c 0,0.828124 -0.6875,1.5 -1.539063,1.5 l -28.902343,0 C 0.691406,19.144532 0,18.472656 0,17.644532 c 0,-0.828126 0.691406,-1.5 1.542969,-1.5 l 28.902343,0 c 0.851563,0 1.539063,0.671874 1.539063,1.5"
+     style="fill:#0f0c0c;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+  <path
+     id="path23"
+     d="m 31.984375,28.101563 c 0,0.832031 -0.6875,1.5 -1.539063,1.5 l -28.902343,0 C 0.691406,29.601563 0,28.933594 0,28.101563 c 0,-0.828125 0.691406,-1.5 1.542969,-1.5 l 28.902343,0 c 0.851563,0 1.539063,0.671875 1.539063,1.5"
+     style="fill:#0f0c0c;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+</svg>
+
+<br/>
+
+</div>
+
+<div id="traceable" style="height:200px;"></div>
+
+<div id="eyediv" ><i><span id="eye"  title="Enable Nexus License Filter"         class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></i></div>
+<div id="firediv"><i><span id="fire" title="Enable Nexus Vulnerability Firewall" class="glyphicon glyphicon-fire"     aria-hidden="true"></span></i></div>
+
+<!-- FOOTER -->
+      
+    <!-- faster scripts -->
+<script src="underscore-min.js" charset="utf-8"></script>  
+<script src="jquery.min.js" charset="utf-8"></script>
+<script src="jquery-ui.min.js" charset="utf-8"></script>
+<script src="jquery.bootstrap-touchspin.min.js"charset="utf-8"></script>
+<script src="jasny-bootstrap.min.js"></script>
+<script src="seedrandom.js">
+</script><script src="d3.min.js" charset="utf-8"></script>
+<script src="bootstrap.min.js" charset="utf-8"></script>
+<script src="vis.js" charset="utf-8"></script>
+</body>
+
+</html>
