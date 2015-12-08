@@ -15,7 +15,6 @@ body {
 }
 
 nav {
-  border-radius: 0 !important;
   -webkit-border-radius: 0 !important;
      -moz-border-radius: 0 !important;
           border-radius: 0 !important;
@@ -26,9 +25,7 @@ div#impact_parent_div, div#supp_text, div#app_text, div#impact_panel, div#comp_p
   cursor:zoom-in;
 }
 
-div#impact_text {
-  pointer-events: none;
-}
+div#impact_text {  pointer-events: none; }
 
 div#impact_dialog {
   font-size:40px;
@@ -37,34 +34,16 @@ div#impact_dialog {
   padding:16px;
 }
 
-div#impact_dialog b {
-  color:#e31a1c;
-}
+div#impact_dialog b { color:#e31a1c; }
 
-h1, brand {
+h1, h2, h3, h4, brand {
   font-family: "Dosis", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 50px;
-  line-height: 52px;
 }
 
-h2 {
-  font-family: "Dosis", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 40px;
-  line-height: 44px;
-}
-
-h3 {
-  font-family: "Dosis", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 30px;
-  line-height: 34px;
-}
-
-h4 {
-  font-family: "Dosis", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 26px;
-  line-height: 27.5px;
-}
-
+h1, brand { font-size: 50px; line-height: 52px; }
+h2 { font-size: 40px; line-height: 44px; }
+h3 { font-size: 30px; line-height: 34px; }
+h4 { font-size: 26px; line-height: 27.5px; }
 
 div.vis > label {
   font-family: "Dosis", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -73,7 +52,6 @@ div.vis > label {
 
 div.form-group.vis { font-size:10pt; line-height:12pt;}
 div.form-group.panel { font-size:10pt; line-height:12pt; color:black;}
-
 
 #vis {
   width:100% !important;
@@ -103,7 +81,6 @@ div.form-group.panel { font-size:10pt; line-height:12pt; color:black;}
   margin: 0;
 }
 
-
 .node rect {
   cursor: move;
   fill-opacity: 0.9;
@@ -125,10 +102,7 @@ div.form-group.panel { font-size:10pt; line-height:12pt; color:black;}
   stroke-opacity: 0.5;
 }
 
-
 .nodec circle {
-  /*fill: #fff;
-  stroke: steelblue;*/
   stroke-width: 0.5px;
   shape-rendering: crispEdges;
 }
@@ -226,7 +200,6 @@ div#traceable {
   display:none;
 }
 
-
 div#nexusdiv {
   position: absolute;
   text-align:center;
@@ -238,9 +211,7 @@ div#nexusdiv {
   margin-left: -21.5px;
 }
 
-span#eye, span#fire {
-  font-size:25px;
-}
+span#eye, span#fire { font-size:25px; }
 
 div#eyediv, div#firediv {
   position:absolute;

@@ -1,7 +1,15 @@
+//---------------------------------------------------------
+//  formatters for numeric display
+
 var comma = d3.format("0,000");
+var currency = d3.format("$0,000");
 var formatPercent = d3.format("p");
 var percent = function(x) { return formatPercent(Math.round(x)); };
-var currency = d3.format("$0,000");
+var formatNumber = d3.format(",.0f");
+var format = function(d) { return formatNumber(d) + " TWh"; };
+
+//---------------------------------------------------------
+// enables moving of selected elements to the "front" of the display stack
 
 d3.selection.prototype.moveToFront = function() {
   return this.each(function(){
@@ -10,6 +18,16 @@ d3.selection.prototype.moveToFront = function() {
 };
 
 //---------------------------------------------------------
+// simplifies cleaning values from fields
+
+jQuery.fn.extend({
+  cleanval: function() {
+    return(this.val().replace(/[ %\$,]/, ""));
+  },
+});
+
+//---------------------------------------------------------
+// colors we use
 
 var RED = "#e31a1c", GREEN = "#33a02c" , BLACK = "black" , 
     YELLOW = "#ffed6f", PURPLE = "#762a83", LIGHT_PURPLE = "#cab2d6",
@@ -17,6 +35,7 @@ var RED = "#e31a1c", GREEN = "#33a02c" , BLACK = "black" ,
     ORANGE = "#ff7f00", FILL_LEFT = "#a6cee3" ;
 
 //---------------------------------------------------------
+// additional tools to help make random values
 
 function range(lowEnd, highEnd){
     var arr = [],
@@ -24,12 +43,6 @@ function range(lowEnd, highEnd){
     while ( c-- ) { arr[c] = highEnd-- ; }
     return arr;
 }
-
-jQuery.fn.extend({
-  cleanval: function() {
-    return(this.val().replace(/[ %\$,]/, ""));
-  },
-});
 
 Math.seed = function(s, m) {
     if (arguments.length == 1) m = 10000;
@@ -58,10 +71,7 @@ Array.prototype.shuffle = function (m) {
 // chart globals
 var margin = {top: 1, right: 1, bottom: 6, left: 1},
     width = 500 - margin.left - margin.right,
-    height = 630 - margin.top - margin.bottom;
-
-var formatNumber = d3.format(",.0f"),
-    format = function(d) { return formatNumber(d) + " TWh"; },
+    height = 630 - margin.top - margin.bottom,
     color = d3.scale.category20();
 
 var oldrl = -1 ;
@@ -76,6 +86,7 @@ var napps = 0 ;
 var repovulns = 0 ;
 var repopct = 0 ;
 var ncomps = 1 ;
+
 var w = 500, h = 500, r = 400,
     x = d3.scale.linear().range([0, r]),
     x1 = d3.scale.linear().range([0, r]),
@@ -97,8 +108,10 @@ var old_napps = -1;
 var old_pct_vuln = -1;
 var old_ncomps = -1;
 var old_lic = -1;
+var l_old_lic = -1 ;
 
-//=================================================
+//---------------------------------------------------------
+// pop-up dialog when mouse clicks on one of three regions
 
 $( "#impact_dialog").dialog({
   modal: true,  
@@ -122,6 +135,9 @@ $( "#impact_dialog").dialog({
       });
     }
 });
+
+//---------------------------------------------------------
+// click/change handlers
 
 function do_comp_panel_click() {
   $('#leftnavmenu').offcanvas('hide'); 
@@ -263,9 +279,7 @@ $("input[name='costperhour']").TouchSpin({
   postfix: '$'
 });
 
-//=================================================
-
-var l_old_lic = -1 ;
+//---------------------------------------------------------
 
 function update_left() {
 
@@ -377,7 +391,7 @@ function update_left() {
 
 }
 
-//=================================================
+//---------------------------------------------------------
 
 function zoomleft(d, i) {
 
@@ -398,7 +412,7 @@ function zoomleft(d, i) {
 
 }
 
-//=================================================
+//---------------------------------------------------------
 
 function update_right() {
 
@@ -531,7 +545,7 @@ function update_right() {
 
 }
 
-//=================================================
+//---------------------------------------------------------
 
 function zoomright(d, i) {
 
@@ -553,7 +567,7 @@ function zoomright(d, i) {
   d3.event.stopPropagation();
 }
 
-//=================================================
+//---------------------------------------------------------
 
 function update_sv() {
 
@@ -606,7 +620,7 @@ function update_sv() {
 
 }
 
-//=================================================
+//---------------------------------------------------------
 
 function update_calcs() {
 
@@ -645,8 +659,7 @@ function update_calcs() {
 
 }
 
-
-//=================================================
+//---------------------------------------------------------
 
 function update_panel_calc() {
 
@@ -704,8 +717,7 @@ function update_panel_calc() {
 
 }
 
-
-//=================================================
+//---------------------------------------------------------
 
 function update_aa() {
 
@@ -722,7 +734,7 @@ function update_aa() {
 
 }
 
-//====================================
+//---------------------------------------------------------
 
 function do_resize() {
 
@@ -751,51 +763,7 @@ function do_resize() {
 
 };
 
-//====================================
-
-function medium_typical() {
-
-  reset_icons();
-
-  $("#suppliers").val(300);
-  $("#versions").val(27);
-  $("#repovulns").val(90);
-  $("#application").val(10);
-  $("#perapp").val(106);
-  $("#knownvuln").val(23);
-  $("#knownlic").val(8);
-  $("#goingtofix").val(10);
-  $("#costperhour").val(100);
-  $("#manhours").val(10);
-
-  update_aa();
-  update_sv();
-
-}
-
-//====================================
-
-function google() {
-
-  reset_icons();
-
-  $("#suppliers").val(1);
-  $("#versions").val(2);
-  $("#repovulns").val(0);
-  $("#application").val(300);
-  $("#perapp").val(20);
-  $("#knownvuln").val(0);
-  $("#knownlic").val(0);
-  $("#goingtofix").val(100);
-  $("#costperhour").val(35);
-  $("#manhours").val(100);
-
-  update_aa();
-  update_sv();
-
-}
-
-//====================================
+//---------------------------------------------------------
 
 function reset_icons() {
   oldrl = oldvk = -1;
@@ -805,7 +773,7 @@ function reset_icons() {
   d3.select("#kv").transition().style("background-color", WHITE).duration(0);
 }
 
-//====================================
+//---------------------------------------------------------
 
 function eye(io) {
   if (io == "in") {
@@ -832,7 +800,7 @@ function eye(io) {
   }
 }
 
-//====================================
+//---------------------------------------------------------
 
 function fire(io) {
   if (io == "in") {
@@ -859,15 +827,82 @@ function fire(io) {
   }
 }
 
-//====================================
+//---------------------------------------------------------
+// scenarios
+// 
+// To add more  just make a function and wire it up to "Scenarios" in index.html
+// Follow the same settings as you see here for each one. The "medium_typical"
+// scenario has the field names they map to in comments next to the settings
+//
+
+function medium_typical() {
+
+  reset_icons();
+
+  $("#suppliers").val(300);    // Suppliers/FOSS Projects
+  $("#versions").val(27);      // Versions/component
+  $("#repovulns").val(90);     // Known undesir. %
+  $("#application").val(10);   // Number of Apps
+  $("#perapp").val(106);       // Components per App
+  $("#knownvuln").val(23);     // Vuln ratio % of parts
+  $("#knownlic").val(8);       // Restrictive licenses %
+  $("#goingtofix").val(10);    // % requiring attention
+  $("#costperhour").val(100);  // Cost per hour
+  $("#manhours").val(10);      // Unplanned work/fix (hrs)
+
+  update_aa();
+  update_sv();
+
+}
+
+function google() {
+
+  reset_icons();
+
+  $("#suppliers").val(1);
+  $("#versions").val(2);
+  $("#repovulns").val(0);
+  $("#application").val(300);
+  $("#perapp").val(20);
+  $("#knownvuln").val(0);
+  $("#knownlic").val(0);
+  $("#goingtofix").val(100);
+  $("#costperhour").val(35);
+  $("#manhours").val(100);
+
+  update_aa();
+  update_sv();
+
+}
+
+function uniform() {
+
+  reset_icons();
+
+  $("#suppliers").val(200);
+  $("#versions").val(20);
+  $("#repovulns").val(90);
+  $("#application").val(100);
+  $("#perapp").val(50);
+  $("#knownvuln").val(25);
+  $("#knownlic").val(10);
+  $("#goingtofix").val(10);
+  $("#costperhour").val(100);
+  $("#manhours").val(10);
+
+  update_aa();
+  update_sv();
+
+}
+
+//---------------------------------------------------------
+// main app initializers
 
 d3.select(window).on('resize', do_resize);
 
-update_left();
+update_left(); 
 update_right();
 
 do_resize();
 
-
-
-
+// fin
