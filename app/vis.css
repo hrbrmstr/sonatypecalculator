@@ -8,8 +8,6 @@ body {
   font-family: "Alegreya Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 19px;
   line-height: 24px;
-  /*background-color: #087F94;*/
-  /*background-color: rgba(8, 127, 184, 0.6);;*/
   width: 100% !important;
   height: 100% !important;
   margin: 0;
@@ -92,7 +90,7 @@ div.form-group.panel { font-size:10pt; line-height:12pt; color:black;}
   border: 0px solid black;
   padding: 0;
   margin: 0;
-  background: url(loader.svg) no-repeat;
+  background: url(../images/loader.svg) no-repeat;
   background-size:100%;
 }
 
