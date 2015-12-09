@@ -67,8 +67,8 @@ Array.prototype.shuffle = function (m) {
 };
 
 //---------------------------------------------------------
-
 // chart globals
+
 var margin = {top: 1, right: 1, bottom: 6, left: 1},
     width = 500 - margin.left - margin.right,
     height = 630 - margin.top - margin.bottom,
@@ -172,8 +172,7 @@ $("#traceable").slider({
   min: 0,
   max: 100,
   value: 100,
-  slide: function( event, ui ) {
-  }
+  slide: function( event, ui ) { }
 });
 
 $("#calcmeleft").on('click', function() { 
@@ -213,10 +212,7 @@ $("#costperhour").on('change paste', function() { update_calcs() });
 $("#manhours").on(   'change paste', function() { update_calcs() });
 
 $("#eye").hover( function() { eye("in") ;  }, function() { eye("out") ;  });
-//$("#fire").hover(function() { fire("in") ; }, function() { fire("out") ; });
-
 $("#eye").click( function() { eye("click") ;  });
-//$("#fire").click(function() { fire("click") ; });
 
 $("input[name='suppliers']").TouchSpin({ verticalbuttons: true, max: 1000, mousewheel: false });
 $("input[name='versions']").TouchSpin({ verticalbuttons: true, max: 30, mousewheel: false });
@@ -280,6 +276,7 @@ $("input[name='costperhour']").TouchSpin({
 });
 
 //---------------------------------------------------------
+// left circle functions
 
 function update_left() {
 
@@ -391,8 +388,6 @@ function update_left() {
 
 }
 
-//---------------------------------------------------------
-
 function zoomleft(d, i) {
 
   var k = r / d.r / 2;
@@ -412,7 +407,10 @@ function zoomleft(d, i) {
 
 }
 
+var total_bad = 0;
+
 //---------------------------------------------------------
+// right circle functions
 
 function update_right() {
 
@@ -441,6 +439,8 @@ function update_right() {
                   "ctop" : "",
                   "children" : [ ] } ;
 
+    total_bad = 0 ;
+
     for (var i=0; i<napps; i++) {
 
       var kids = [] ;
@@ -451,6 +451,8 @@ function update_right() {
       vuln_rng = vuln_rng.shuffle(30000);
       var vuln_items = vuln_rng.slice(0, Math.floor(pct_vuln * vuln_rng.length * 0.7));
 
+      // 37% of the vulns are critical, so they get colored differently
+      // the rest get divided equally between med & low vuln criticality
       var vred = Math.floor(0.37 * vuln_items.length);
       var vrest = vuln_items.length - vred;
 
@@ -465,6 +467,8 @@ function update_right() {
 
       for (var j=0; j<ncomps; j++) {
 
+        var mark_it = 0;
+
         fillcol = GREEN;
         strokecol = WHITE;
         strokewidth = 0.25;
@@ -476,11 +480,13 @@ function update_right() {
           strokecol = PURPLE ;
           strokewidth = napps < 50 ? 1.75 : 1;
           ctop = " ctop" ;
+          mark_it++;
         }
 
         // if the component is vulnerable
 
         if (vuln_items.indexOf(j) != -1) {
+          mark_it++;
           vcount += 1;
           if (vcount <= vred) {
             fillcol = LIC_RED ;
@@ -498,7 +504,10 @@ function update_right() {
                     "sw"     : strokewidth,
                     "fill"   : fillcol,
                     "ctop"   : ctop,
-                    "size"   : 1 })
+                    "size"   : 1 });
+
+        total_bad += (mark_it > 0) ? 1 : 0 ;
+
       };
 
       rootright.children.push({  "name"     : "A",
@@ -544,8 +553,6 @@ function update_right() {
   d3.select("#vis4").on("click", function() { zoomright(rootright); });
 
 }
-
-//---------------------------------------------------------
 
 function zoomright(d, i) {
 
@@ -601,8 +608,8 @@ function update_sv() {
 
   if ((application * perapp) != 0) {
     atxt = atxt + "<div style='text-align:center'>" +
-                  "<b>" + comma(Math.floor(application*perapp))               + "</b> components in use; "  +
-                  "<b>" + comma(Math.floor(knownvuln*application*perapp/100)) + "</b> undesirable; " +
+                  "<b>" + comma(Math.floor(application*perapp))               + "</b> total components in use; "  +
+                  "<b>" + comma(total_bad) + "</b> undesirable; including " +
                   "<b>" + comma(Math.floor(knownlic*application*perapp/100)) + "</b> with restrictive licenses" +
                   "</div>"
   }
@@ -647,12 +654,13 @@ function update_calcs() {
   } else {
 
     var tot_vuln = Math.floor(knownvuln * application * perapp / 100);
-    var pct_remd = Math.floor((goingtofix / 100) * tot_vuln);
+    var pct_remd = Math.floor((goingtofix / 100) * total_bad);
     var remd_hrs = Math.floor(manhours * pct_remd);
     var remd_cst = remd_hrs * costperhour ;
 
     $("#notinclude").show();
-    $("#impact_text").show().html("<b>" + comma(pct_remd) + "</b> components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
+    $("#impact_text").show().html("<b>" + comma(pct_remd) + "</b> components remediated out of <b>" + 
+                                          comma(total_bad) + "</b>, requiring " +
                                   "<b>" + comma(remd_hrs) + "</b> hrs of effort to fix == " +
                                   "<b>" + currency(remd_cst) + "</b>USD");
   };
@@ -674,6 +682,7 @@ function update_panel_calc() {
   var knownlic     = +$("#knownlic_panel").cleanval();
   var goingtofix   = +$("#goingtofix_panel").val();
   var costperhour  = +$("#costperhour_panel").val();
+  var costperlic   = +$("#costperlic_panel").val();
   var manhours     = +$("#manhours_panel").val();
 
   versions = (versions === 0) ? 1 : versions ;
@@ -708,11 +717,13 @@ function update_panel_calc() {
     var remd_hrs = Math.floor(manhours * pct_remd);
     var remd_cst = remd_hrs * costperhour ;
     var lic_calc = Math.floor(knownlic*application*perapp/100);
+    var lic_cost = Math.floor(costperlic)
 
-    $("#impact_panel").show().html("<b>" + comma(pct_remd)    + "</b> components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
+    $("#impact_panel").show().html("<b>" + comma(pct_remd)    + "</b> total components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
                                    "<b>" + comma(remd_hrs)    + "</b> hrs of unplanned/unscheduled work to fix == "   +
                                    "<b>" + currency(remd_cst) + "</b>USD<br/><br/>" +
-                                   "<b>" + comma(lic_calc)    + "</b> components with restrictive licenses.");
+                                   "<b>" + comma(lic_calc)    + "</b> total components with restrictive licenses. License remedation cost: $" +
+                                   "<b>" + comma(costperlic*repo_lic*suppliers/100) + "</b>USD");
   };
 
 }
