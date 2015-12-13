@@ -204,8 +204,8 @@ $("#suppliers").on(  'change paste', function() { update_sv() });
 $("#versions").on(  ' change paste', function() { update_sv() });
 $("#repovulns").on( ' change paste', function() { update_sv() });
 
-$("#application").on('change paste', function() { update_aa() });
-$("#perapp").on(     'change paste', function() { update_aa() });
+$("#application").on('change paste', function() { olddb = -1 ; update_aa() });
+$("#perapp").on(     'change paste', function() { olddb = -1 ; update_aa() });
 $("#knownvuln").on(  'change paste', function() { reset_icons(); update_aa() });
 $("#knownlic").on(   'change paste', function() { reset_icons(); update_aa() });
 
@@ -665,9 +665,11 @@ function update_calcs() {
     var tot_vuln = Math.floor(knownvuln * application * perapp / 100);
 
     if (eyeon) tot_vuln -= olddb ;
+    if (eyeon && tot_vuln < 1) tot_vuln = 1 ;
     if (eyeon) tb -= olddb ;
+    if (eyeon && tb < 1) tb = 1 ;
 
-    var pct_remd = Math.floor((goingtofix / 100) * tb);
+    var pct_remd = Math.ceil((goingtofix / 100) * tb);
     var remd_hrs = Math.floor(manhours * pct_remd);
     var remd_cst = remd_hrs * costperhour ;
 
