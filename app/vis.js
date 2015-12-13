@@ -75,7 +75,8 @@ var margin = {top: 1, right: 1, bottom: 6, left: 1},
     color = d3.scale.category20();
 
 var oldrl = -1 ;
-var oldkv = -1;
+var oldfs = -1 ;
+var oldkv = -1 ;
 
 var eyeon = false;
 var fireon = false;
@@ -777,7 +778,7 @@ function do_resize() {
 //---------------------------------------------------------
 
 function reset_icons() {
-  oldrl = oldvk = -1;
+  oldrl = oldvk = oldfs = -1;
   d3.select("#eye").style("color", "black");
   d3.select("#fire").style("color", "black");
   d3.select("#kl").transition().style("background-color", WHITE).duration(0);
@@ -797,13 +798,17 @@ function eye(io) {
     d3.select("#eye").style("color", eyeon?GREEN:BLACK);
     if (eyeon) {
       if (oldrl == -1) oldrl = $("#knownlic").val();
+      if (oldfs == -1) oldfs = $("#suppliers").val();
       $("#knownlic").val(0)
+      $("#suppliers").val(oldfs - Math.floor(oldfs * oldrl/100))
       update_aa();
       update_sv();
       update_calcs();
     } else {
       if (oldrl == -1) oldrl = $("#knownlic").val();
+      if (oldfs == -1) oldfs = $("#suppliers").val();
       $("#knownlic").val(oldrl);
+      $("#suppliers").val(oldfs);
       update_aa();
       update_sv();
       update_calcs();
