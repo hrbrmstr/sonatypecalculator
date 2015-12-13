@@ -811,7 +811,7 @@ function eye(io) {
     if (eyeon) {
       if (oldrl == -1) oldrl = $("#knownlic").val();
       if (oldfs == -1) oldfs = $("#suppliers").val();
-      if (olddb == -1) olddb = double_bad;
+      olddb = double_bad;
       $("#knownlic").val(0)
       $("#suppliers").val(oldfs - Math.floor(oldfs * oldrl/100))
       update_aa();
@@ -820,7 +820,6 @@ function eye(io) {
     } else {
       if (oldrl == -1) oldrl = $("#knownlic").val();
       if (oldfs == -1) oldfs = $("#suppliers").val();
-      if (olddb == -1) olddb = double_bad;
       $("#knownlic").val(oldrl);
       $("#suppliers").val(oldfs);
       update_aa();
