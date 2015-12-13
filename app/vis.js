@@ -77,6 +77,7 @@ var margin = {top: 1, right: 1, bottom: 6, left: 1},
 var oldrl = -1 ;
 var oldfs = -1 ;
 var oldkv = -1 ;
+var olddb = -1 ;
 
 var eyeon = false;
 var fireon = false;
@@ -408,7 +409,8 @@ function zoomleft(d, i) {
 
 }
 
-var total_bad = 0;
+var total_bad = 0 ;
+var double_bad = 0 ;
 
 //---------------------------------------------------------
 // right circle functions
@@ -441,6 +443,7 @@ function update_right() {
                   "children" : [ ] } ;
 
     total_bad = 0 ;
+    double_bad = 0 ;
 
     for (var i=0; i<napps; i++) {
 
@@ -508,6 +511,7 @@ function update_right() {
                     "size"   : 1 });
 
         total_bad += (mark_it > 0) ? 1 : 0 ;
+        double_bad += (mark_it > 1) ? 1 : 0 ;
 
       };
 
@@ -632,8 +636,11 @@ function update_sv() {
 
 function update_calcs() {
 
+  // double bad gets factored in by subtracting it from total vulns 
+
   var suppliers    = +$("#suppliers").cleanval();
   var versions     = +$("#versions").cleanval();
+
   var application  = +$("#application").cleanval();
   var perapp       = +$("#perapp").cleanval();
   var knownvuln    = +$("#knownvuln").cleanval();
@@ -641,6 +648,7 @@ function update_calcs() {
   var goingtofix   = +$("#goingtofix").val();
   var costperhour  = +$("#costperhour").val();
   var manhours     = +$("#manhours").val();
+  var tb = total_bad ;
 
   versions = (versions === 0) ? 1 : versions ;
 
@@ -655,13 +663,17 @@ function update_calcs() {
   } else {
 
     var tot_vuln = Math.floor(knownvuln * application * perapp / 100);
-    var pct_remd = Math.floor((goingtofix / 100) * total_bad);
+
+    if (eyeon) tot_vuln -= olddb ;
+    if (eyeon) tb -= olddb ;
+
+    var pct_remd = Math.floor((goingtofix / 100) * tb);
     var remd_hrs = Math.floor(manhours * pct_remd);
     var remd_cst = remd_hrs * costperhour ;
 
     $("#notinclude").show();
     $("#impact_text").show().html("<b>" + comma(pct_remd) + "</b> components remediated out of <b>" + 
-                                          comma(total_bad) + "</b>, requiring " +
+                                          comma(tb) + "</b>, requiring " +
                                   "<b>" + comma(remd_hrs) + "</b> hrs of effort to fix == " +
                                   "<b>" + currency(remd_cst) + "</b>USD");
   };
@@ -778,7 +790,7 @@ function do_resize() {
 //---------------------------------------------------------
 
 function reset_icons() {
-  oldrl = oldvk = oldfs = -1;
+  oldrl = oldvk = oldfs = olddb = -1;
   d3.select("#eye").style("color", "black");
   d3.select("#fire").style("color", "black");
   d3.select("#kl").transition().style("background-color", WHITE).duration(0);
@@ -799,6 +811,7 @@ function eye(io) {
     if (eyeon) {
       if (oldrl == -1) oldrl = $("#knownlic").val();
       if (oldfs == -1) oldfs = $("#suppliers").val();
+      if (olddb == -1) olddb = double_bad;
       $("#knownlic").val(0)
       $("#suppliers").val(oldfs - Math.floor(oldfs * oldrl/100))
       update_aa();
@@ -807,6 +820,7 @@ function eye(io) {
     } else {
       if (oldrl == -1) oldrl = $("#knownlic").val();
       if (oldfs == -1) oldfs = $("#suppliers").val();
+      if (olddb == -1) olddb = double_bad;
       $("#knownlic").val(oldrl);
       $("#suppliers").val(oldfs);
       update_aa();
