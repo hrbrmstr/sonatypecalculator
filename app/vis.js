@@ -197,6 +197,7 @@ $("#suppliers_panel").on(  'change', function() { update_panel_calc() });
 $("#versions_panel").on(   'change', function() { update_panel_calc() });
 $("#repovulns_panel").on(  'change', function() { update_panel_calc() });
 $("#repolic_panel").on(    'change', function() { update_panel_calc() });
+$("#distributed_panel").on('change', function() { update_panel_calc() });
 
 $("#perapp_panel").on(     'change', function() { update_panel_calc() });
 $("#knownvuln_panel").on(  'change', function() { update_panel_calc() });
@@ -695,6 +696,7 @@ function update_panel_calc() {
   var costperhour  = +$("#costperhour_panel").val();
   var costperlic   = +$("#costperlic_panel").val();
   var manhours     = +$("#manhours_panel").val();
+  var distributed  = +$("#distributed_panel").val();
 
   versions = (versions === 0) ? 1 : versions ;
 
@@ -722,18 +724,20 @@ function update_panel_calc() {
 
   } else {
 
-    var tot_vuln = Math.floor(knownvuln * application * perapp / 100);
-    var pct_remd = Math.floor((goingtofix / 100) * tot_vuln);
-    var remd_hrs = Math.floor(manhours * pct_remd);
-    var remd_cst = remd_hrs * costperhour ;
-    var lic_calc = Math.floor(knownlic * application * perapp / 100);
-    var lic_cost = Math.floor(costperlic)
+    var tot_vuln  = Math.floor(knownvuln * application * perapp / 100);
+    var pct_remd  = Math.floor((goingtofix / 100) * tot_vuln);
+    var remd_hrs  = Math.floor(manhours * pct_remd);
+    var remd_cst  = remd_hrs * costperhour ;
+    var lic_calc  = Math.floor(knownlic * application * perapp / 100);
+    var lic_cost  = Math.floor(costperlic);
+    var lic_waste = Math.floor((distributed/100) * perapp * application * (knownlic/100) * lic_cost);
+    var waste     = lic_waste + remd_cst;
 
-    $("#impact_panel").show().html("Total waste: <b>" + currency(remd_cst + ((goingtofix/100) * costperlic * knownlic * suppliers / 100)) + "</b>USD<br/><br/>" +
+    $("#impact_panel").show().html("Total waste: <b>" + currency(waste) + "</b>USD<br/><br/>" +
                                    "Vulnerability remediaton cost: <b>" + currency(remd_cst) + "</b>USD<br/><br/>" +
                                    "<b>" + comma(pct_remd)    + "</b> total vulnerable components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
                                    "<b>" + comma(remd_hrs)    + "</b> hrs of unplanned/unscheduled work to fix.<br/><br/>" +
-                                   "License remedation cost:<br/>" + goingtofix + "% of <b>" + currency(costperlic * knownlic * suppliers / 100) + "</b>USD == <b>" + currency((goingtofix/100) * (costperlic * knownlic * suppliers / 100)) + "</b>USD<br/><br/>" +
+                                   "License remedation cost:<br/>" + distributed + "% of <b>" + currency(perapp * application * (knownlic/100) * lic_cost) + "</b>USD == <b>" + currency(lic_waste) + "</b>USD<br/><br/>" +
                                    "<b>" + comma(lic_calc)    + "</b> total components with restrictive licenses."
                                    );
   };
