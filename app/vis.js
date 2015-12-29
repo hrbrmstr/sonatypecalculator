@@ -149,7 +149,7 @@ function do_comp_panel_click() {
 
 function do_impact_panel_click() {
   $('#rightnavmenu').offcanvas('hide'); 
-  $("#impact_dialog").html($("#impact_panel").html()).css("font-size", "30pt").css("line-height", "34pt");
+  $("#impact_dialog").html($("#impact_panel").html()).css("font-size", "18pt").css("line-height", "20pt");
   $("#impact_dialog").dialog("open");
 }
 
@@ -160,6 +160,11 @@ function do_impact_click() {
 
 function do_sv_click() {
   $("#impact_dialog").html($("#supp_text").html().replace(/;/g, "<br/>").replace("in use.", "<br/>in use").replace("versions", "versions<br/><br/>").replace("undesirable", "undesirable<br/><br/>"));
+  $("#impact_dialog").dialog("open");
+}
+
+function do_ni_click() {
+  $("#impact_dialog").html($("#notinclude").html());
   $("#impact_dialog").dialog("open");
 }
 
@@ -187,11 +192,11 @@ $("#calcmeright").on('click', function() {
   update_panel_calc();
 });
 
+$("#application_panel").on('change paste', function() { update_panel_calc() });
 $("#suppliers_panel").on(  'change', function() { update_panel_calc() });
 $("#versions_panel").on(   'change', function() { update_panel_calc() });
 $("#repovulns_panel").on(  'change', function() { update_panel_calc() });
 $("#repolic_panel").on(    'change', function() { update_panel_calc() });
-$("#application_panel").on('change', function() { update_panel_calc() });
 
 $("#perapp_panel").on(     'change', function() { update_panel_calc() });
 $("#knownvuln_panel").on(  'change', function() { update_panel_calc() });
@@ -724,11 +729,13 @@ function update_panel_calc() {
     var lic_calc = Math.floor(knownlic * application * perapp / 100);
     var lic_cost = Math.floor(costperlic)
 
-    $("#impact_panel").show().html("<b>" + comma(pct_remd)    + "</b> total components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
-                                   "<b>" + comma(remd_hrs)    + "</b> hrs of unplanned/unscheduled work to fix == "   +
-                                   "<b>" + currency(remd_cst) + "</b>USD<br/><br/>" +
-                                   "<b>" + comma(lic_calc)    + "</b> total components with restrictive licenses. License remedation cost: $" +
-                                   "<b>" + comma(costperlic * knownlic * suppliers / 100) + "</b>USD");
+    $("#impact_panel").show().html("Total waste: <b>" + currency(remd_cst + ((goingtofix/100) * costperlic * knownlic * suppliers / 100)) + "</b>USD<br/><br/>" +
+                                   "Vulnerability remediaton cost: <b>" + currency(remd_cst) + "</b>USD<br/><br/>" +
+                                   "<b>" + comma(pct_remd)    + "</b> total vulnerable components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
+                                   "<b>" + comma(remd_hrs)    + "</b> hrs of unplanned/unscheduled work to fix.<br/><br/>" +
+                                   "License remedation cost:<br/>" + goingtofix + "% of <b>" + currency(costperlic * knownlic * suppliers / 100) + "</b>USD == <b>" + currency((goingtofix/100) * (costperlic * knownlic * suppliers / 100)) + "</b>USD<br/><br/>" +
+                                   "<b>" + comma(lic_calc)    + "</b> total components with restrictive licenses."
+                                   );
   };
 
 }

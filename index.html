@@ -57,14 +57,17 @@
 
     <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:10px">
 
+      <table>
+      <tr><td>
       <label for="application_panel" style="color:black">Number of Apps</label>
       <input class="form-control" id="application_panel" type="text" placeholder="" name="application_panel" value="2000"><br/>
-
+      </td><td style="width:10px"> </td><td>
       <label for="perapp_panel" style="color:black">Components per App</label>
       <input class="form-control" id="perapp_panel" type="text" placeholder="" name="perapp_panel" value="106"><br/>
+      </td></tr></table>
 
-      <label title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." for="knownvuln_panel" style="color:black">Vuln ratio as % of parts</label>
-      <input class="form-control" title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." id="knownvuln_panel" type="text" placeholder="" name="knownvuln_panel" value="23"><br/>
+      <label title="Known CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." for="knownvuln_panel" style="color:black">Vuln ratio as % of parts</label>
+      <input class="form-control" title="Known CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." id="knownvuln_panel" type="text" placeholder="" name="knownvuln_panel" value="23"><br/>
 
       <label for="knownlic_panel" style="color:black">Restrictive Licenses %</label>
       <input class="form-control" id="knownlic_panel" type="text" placeholder="" name="knownlic_panel" value="8"><br/>
@@ -73,11 +76,14 @@
 
     <div class="row-fluid"><div class="col-xs-12 form-group panel" style="padding-top:10px">
 
+      <table>
+      <tr><td>
       <label for="goingtofix_panel" style="color:black">% Requiring Attention</label>
       <input class="form-control" id="goingtofix_panel" type="text" placeholder="" name="goingtofix_panel" value="10"><br/>
-
+      </td><td style="width:10px">  </td><td>
       <label for="costperhour_panel" style="color:black">Cost ($) Per Hour</label>
       <input class="form-control" id="costperhour_panel" type="text" placeholder="" name="costperhour_panel" value="100"><br/>
+      </td></tr></table>
 
       <label for="costperlic_panel" style="color:black">Remediation Cost ($) Per Restrictive License</label>
       <input class="form-control" id="costperlic_panel" type="text" placeholder="" name="costperlic_panel" value="5000"><br/>
@@ -138,8 +144,8 @@
         <input class="form-control" id="versions" type="text" placeholder="27" name="versions">
       </div>
        <div id="vv" class="col-xs-1 form-group vis" style="width:90px">
-        <label for="repovulns" style="color:#e31a1c">Known<br/>Undesir. %</label>
-        <input class="form-control" id="repovulns" type="text" placeholder="90" name="repovulns">
+        <label for="repovulns" style="color:#e31a1c" title="A combination of older versions, less functional versions, buggy versions and vulnerable versions.">Known<br/>Undesir. %</label>
+        <input class="form-control" id="repovulns" type="text" placeholder="90" name="repovulns" title="A combination of older versions, less functional versions, buggy versions and vulnerable versions.">
       </div>
       <div class="col-xs-2 form-group vis media-middle" style="pointer-events:none; height:80px; max-height:80px">
          <div id="supp_text"  onclick="do_sv_click(); return(false)" class="well well-sm" style="display:none; margin-bottom:0px; height:80px; max-height:80px"></div>
@@ -156,8 +162,8 @@
         <input class="form-control" id="perapp" type="text" placeholder="106" name="perapp">
       </div>
       <div id="kv" class="col-xs-1 form-group vis">
-        <label for="knownvuln" title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." style="color:#e31a1c; font-size:12px;">Vuln ratio<br/>% of parts</label>
-        <input class="form-control" title="Knows CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." id="knownvuln" type="text" placeholder="23" name="knownvuln">
+        <label for="knownvuln" title="Known CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." style="color:#e31a1c; font-size:12px;">Vuln ratio<br/>% of parts</label>
+        <input class="form-control" title="Known CVEs as a percentage of total components. This is unlikely to map 1:1 as a single component can have plural CVEs associated with it." id="knownvuln" type="text" placeholder="23" name="knownvuln">
       </div>
       <div id="kl" class="col-xs-1 form-group vis" >
         <label for="knownlic" style="color:#762a83;">Restrictive<br/>licenses %</label>
@@ -193,7 +199,7 @@
         <div id="impact_text" class="well well-sm" style="display:none; margin-bottom:0px; margin-top:10px"></div>
       </div>
       <div class="col-sm-3 form-group vis">
-        <div id="notinclude" class="well well-sm" style="display:none; margin-bottom:50px; margin-top:10px; font-size:11px">
+        <div id="notinclude" class="well well-sm" onclick="do_ni_click(); return(false)" style="display:none; margin-bottom:50px; margin-top:10px; font-size:11px">
           Calculations do not include <b>breach cost</b>, <b>help desk calls</b>, <b>maintenance</b>, <b>time-to-market</b>, <b>reputation</b> or <b>stock price</b>.  
         </div>
       </div>

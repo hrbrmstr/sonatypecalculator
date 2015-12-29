@@ -20,7 +20,7 @@ nav {
           border-radius: 0 !important;
 }
 
-div#impact_parent_div, div#supp_text, div#app_text, div#impact_panel, div#comp_panel {
+div#impact_parent_div, div#supp_text, div#app_text, div#impact_panel, div#comp_panel, div#notinclude {
   pointer-events: all;
   cursor:zoom-in;
 }
