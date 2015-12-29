@@ -29,27 +29,27 @@ jQuery.fn.extend({
 //---------------------------------------------------------
 // colors we use
 
-var RED = "#e31a1c", GREEN = "#33a02c" , BLACK = "black" , 
-    YELLOW = "#ffed6f", PURPLE = "#762a83", LIGHT_PURPLE = "#cab2d6",
-    WHITE = "#ffffff", BROWN = "#b15928", LIC_RED = RED,
+var RED    = "#e31a1c", GREEN     = "#33a02c", BLACK        = "black" , 
+    YELLOW = "#ffed6f", PURPLE    = "#762a83", LIGHT_PURPLE = "#cab2d6",
+    WHITE  = "#ffffff", BROWN     = "#b15928", LIC_RED      = RED,
     ORANGE = "#ff7f00", FILL_LEFT = "#a6cee3" ;
 
 //---------------------------------------------------------
 // additional tools to help make random values
 
 function range(lowEnd, highEnd){
-    var arr = [],
-    c = highEnd - lowEnd + 1;
-    while ( c-- ) { arr[c] = highEnd-- ; }
-    return arr;
+  var arr = [],
+  c = highEnd - lowEnd + 1;
+  while ( c-- ) { arr[c] = highEnd-- ; }
+  return arr;
 }
 
 Math.seed = function(s, m) {
-    if (arguments.length == 1) m = 10000;
-    return function() {
-        s = Math.sin(s) * m;
-        return s - Math.floor(s);
-    };
+  if (arguments.length == 1) m = 10000;
+  return function() {
+    s = Math.sin(s) * m;
+    return s - Math.floor(s);
+  };
 };
 
 Array.prototype.shuffle = function (m) {
@@ -198,14 +198,15 @@ $("#knownvuln_panel").on(  'change', function() { update_panel_calc() });
 $("#knownlic_panel").on(   'change', function() { update_panel_calc() });
 $("#goingtofix_panel").on( 'change', function() { update_panel_calc() });
 $("#costperhour_panel").on('change', function() { update_panel_calc() });
+$("#costperlic_panel").on( 'change', function() { update_panel_calc() });
 $("#manhours_panel").on(   'change', function() { update_panel_calc() });
 
 $("#suppliers").on(  'change paste', function() { update_sv() });
 $("#versions").on(  ' change paste', function() { update_sv() });
 $("#repovulns").on( ' change paste', function() { update_sv() });
 
-$("#application").on('change paste', function() { olddb = -1 ; update_aa() });
-$("#perapp").on(     'change paste', function() { olddb = -1 ; update_aa() });
+$("#application").on('change paste', function() { olddb = -1 ;   update_aa() });
+$("#perapp").on(     'change paste', function() { olddb = -1 ;   update_aa() });
 $("#knownvuln").on(  'change paste', function() { reset_icons(); update_aa() });
 $("#knownlic").on(   'change paste', function() { reset_icons(); update_aa() });
 
@@ -216,21 +217,12 @@ $("#manhours").on(   'change paste', function() { update_calcs() });
 $("#eye").hover( function() { eye("in") ;  }, function() { eye("out") ;  });
 $("#eye").click( function() { eye("click") ;  });
 
-$("input[name='suppliers']").TouchSpin({ verticalbuttons: true, max: 1000, mousewheel: false });
-$("input[name='versions']").TouchSpin({ verticalbuttons: true, max: 30, mousewheel: false });
+$("input[name='suppliers']"  ).TouchSpin({ verticalbuttons: true, max: 1000, mousewheel: false });
+$("input[name='versions']"   ).TouchSpin({ verticalbuttons: true, max: 30,   mousewheel: false });
 $("input[name='application']").TouchSpin({ verticalbuttons: true, max: 1000, mousewheel: false });
-$("input[name='perapp']").TouchSpin({ verticalbuttons: true, max: 200, mousewheel: false });
-$("input[name='manhours']").TouchSpin({ verticalbuttons: true, max: 100, mousewheel: false });
-$("input[name='knownvuln']").TouchSpin({
-  verticalbuttons: true,
-  min: 0,
-  mousewheel: false,
-  max: 100,
-  step: 1,
-  decimals: 0,
-  boostat: 5,
-  maxboostedstep: 10,
-});
+$("input[name='perapp']"     ).TouchSpin({ verticalbuttons: true, max: 200,  mousewheel: false });
+$("input[name='manhours']"   ).TouchSpin({ verticalbuttons: true, max: 100,  mousewheel: false });
+$("input[name='knownvuln']"  ).TouchSpin({ verticalbuttons: true, max: 100,  mousewheel: false });
 
 $("input[name='repovulns']").TouchSpin({
   verticalbuttons: true,
@@ -240,7 +232,7 @@ $("input[name='repovulns']").TouchSpin({
   step: 1,
   decimals: 0,
   boostat: 5,
-  maxboostedstep: 10,
+  maxboostedstep: 10
 });
 
 $("input[name='knownlic']").TouchSpin({
@@ -251,7 +243,7 @@ $("input[name='knownlic']").TouchSpin({
   mousewheel: false,
   decimals: 0,
   boostat: 5,
-  maxboostedstep: 10,
+  maxboostedstep: 10
 });
 
 $("input[name='goingtofix']").TouchSpin({
@@ -262,7 +254,7 @@ $("input[name='goingtofix']").TouchSpin({
   decimals: 0,
   mousewheel: false,
   boostat: 5,
-  maxboostedstep: 10,
+  maxboostedstep: 10
 });
 
 $("input[name='costperhour']").TouchSpin({
@@ -273,8 +265,8 @@ $("input[name='costperhour']").TouchSpin({
   decimals: 0,
   mousewheel: false,
   boostat: 5,
-  maxboostedstep: 10,
-  postfix: '$'
+  postfix: '$',
+  maxboostedstep: 10
 });
 
 //---------------------------------------------------------
@@ -689,7 +681,6 @@ function update_panel_calc() {
   var suppliers    = +$("#suppliers_panel").cleanval();
   var versions     = +$("#versions_panel").cleanval();
   var repo_vulns   = +$("#repovulns_panel").cleanval();
-  var repo_lic     = +$("#repolic_panel").cleanval();
 
   var application  = +$("#application_panel").cleanval();
   var perapp       = +$("#perapp_panel").cleanval();
@@ -708,10 +699,9 @@ function update_panel_calc() {
   if (isNaN(pap)) pap = 0;
 
   if ((suppliers * versions) != 0) {
-    txt = txt + "<b>" + comma(suppliers)                                     + "</b> Suppliers/FOSS Projects<br/><br/>" +
-                "<b>" + comma(Math.floor(suppliers*versions))                + "</b> versions ("    +
-                "<b>" + comma(Math.floor(repo_vulns*suppliers*versions/100)) + "</b> undesirable)<br/><br/>" +
-                "<b>" + comma(Math.floor(repo_lic*suppliers/100)) + "</b> with restrictive licenses.";
+    txt = txt + "<b>" + comma(suppliers)                                           + "</b> Suppliers/FOSS Projects<br/><br/>" +
+                "<b>" + comma(Math.floor(suppliers * versions))                    + "</b> versions (" +
+                "<b>" + comma(Math.floor(repo_vulns * suppliers * versions / 100)) + "</b> undesirable)<br/><br/>";
     $("#comp_panel").html(txt);
   } else {
     $("#comp_panel").html("")
@@ -731,14 +721,14 @@ function update_panel_calc() {
     var pct_remd = Math.floor((goingtofix / 100) * tot_vuln);
     var remd_hrs = Math.floor(manhours * pct_remd);
     var remd_cst = remd_hrs * costperhour ;
-    var lic_calc = Math.floor(knownlic*application*perapp/100);
+    var lic_calc = Math.floor(knownlic * application * perapp / 100);
     var lic_cost = Math.floor(costperlic)
 
     $("#impact_panel").show().html("<b>" + comma(pct_remd)    + "</b> total components remediated out of <b>" + comma(tot_vuln) + "</b>, requiring " +
                                    "<b>" + comma(remd_hrs)    + "</b> hrs of unplanned/unscheduled work to fix == "   +
                                    "<b>" + currency(remd_cst) + "</b>USD<br/><br/>" +
                                    "<b>" + comma(lic_calc)    + "</b> total components with restrictive licenses. License remedation cost: $" +
-                                   "<b>" + comma(costperlic*repo_lic*suppliers/100) + "</b>USD");
+                                   "<b>" + comma(costperlic * knownlic * suppliers / 100) + "</b>USD");
   };
 
 }
