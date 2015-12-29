@@ -122,13 +122,19 @@
         <a class="navbar-brand" href=""><img src="images/sonatype_logo_blackBG.png"/></a> <h3 style="color:white; margin-top:10px;">Impact of software supply chain practices: Development Waste</h3>
       </div>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="http://sonatype.com/" target="_blank">Learn More</a></li>
+        <li>           
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Learn More</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a target="_blank" href="http://www.sonatype.com">Sonatype Main Page</a></li>
+            <li><a target="_blank" href="http://www.sonatype.com/resources/whitepapers/2015-state-of-the-software-supply-chain-report-hidden-speed-bumps-on-the-road-to-continuous">2015 State of the Software Supply Chain Report</a></li>
+            <li><a target="_blank" href="http://www.sonatype.com/nexus/solution-overview/nexus-firewall">Nexus Firewall Overview</a></li>
+          </ul>
+        </li>
         <li>           
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scenarios</a>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li><a href="#" onclick="medium_typical(); return(false);">Medium/Typical</a></li>
-            <li><a href="#" onclick="google(); return(false);">Google</a></li>
-            <li><a href="#" onclick="uniform(); return(false);">Uniform (test)</a></li>
+            <li><a href="#" onclick="average_hygiene(); return(false);">Average Hygiene</a></li>
+            <li><a href="#" onclick="google_esque(); return(false);">Google-esque</a></li>
           </ul>
         </li>
       </ul>

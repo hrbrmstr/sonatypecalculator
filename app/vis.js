@@ -863,11 +863,11 @@ function fire(io) {
 // scenarios
 // 
 // To add more  just make a function and wire it up to "Scenarios" in index.html
-// Follow the same settings as you see here for each one. The "medium_typical"
+// Follow the same settings as you see here for each one. The "average_hygiene"
 // scenario has the field names they map to in comments next to the settings
 //
 
-function medium_typical() {
+function average_hygiene() {
 
   reset_icons();
 
@@ -887,40 +887,20 @@ function medium_typical() {
 
 }
 
-function google() {
+function google_esque() {
 
   reset_icons();
 
-  $("#suppliers").val(1);
+  $("#suppliers").val(300);
   $("#versions").val(2);
-  $("#repovulns").val(0);
-  $("#application").val(300);
-  $("#perapp").val(20);
-  $("#knownvuln").val(0);
-  $("#knownlic").val(0);
+  $("#repovulns").val(10);
+  $("#application").val(10);
+  $("#perapp").val(106);
+  $("#knownvuln").val(10);
+  $("#knownlic").val(2);
   $("#goingtofix").val(100);
   $("#costperhour").val(35);
   $("#manhours").val(100);
-
-  update_aa();
-  update_sv();
-
-}
-
-function uniform() {
-
-  reset_icons();
-
-  $("#suppliers").val(200);
-  $("#versions").val(20);
-  $("#repovulns").val(90);
-  $("#application").val(100);
-  $("#perapp").val(50);
-  $("#knownvuln").val(25);
-  $("#knownlic").val(10);
-  $("#goingtofix").val(10);
-  $("#costperhour").val(100);
-  $("#manhours").val(10);
 
   update_aa();
   update_sv();
