@@ -68,7 +68,7 @@ div.form-group.panel { font-size:10pt; line-height:12pt; color:black;}
   border: 0px solid black;
   padding: 0;
   margin: 0;
-  background: url(../images/loader.svg) no-repeat;
+  background: url(../images/loader.svg) no-repeat center center;
   background-size:100%;
 }
 
